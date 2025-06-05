@@ -1,0 +1,2 @@
+go mod init github.com/username/student-api
+go run cmd/student-api/main.go

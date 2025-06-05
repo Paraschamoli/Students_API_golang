@@ -1,7 +1,32 @@
+# A human-readable data serialization format often used for complex configurations.
+# Use Cases:
+
+# Configuration files in Kubernetes, Docker Compose, GitHub Actions, Ansible, etc.
+
+# Allows structured, hierarchical settings (objects, lists, etc.)
+
+# Pros:
+
+# Supports nesting and more complex data types (arrays, maps, etc.)
+
+# Easier to structure complex configs than .env.
+
+# Cons:
+
+# More verbose and indentation-sensitive.
+
+# Requires a YAML parser in your application.
+
+
+
+
 env: "dev"
 
 storage_path: "storage/storage.db"
+#  sql lite database is used
 
 http_server:
-  address: "localhost:8003"
+  address: "localhost:8004"
   
+
+
