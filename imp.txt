@@ -1,2 +1,4 @@
 go mod init github.com/username/student-api
 go run cmd/student-api/main.go
+go run cmd/students_API
+go run cmd/students_API/main.go --config=config/local.yaml

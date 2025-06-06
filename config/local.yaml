@@ -26,7 +26,7 @@ storage_path: "storage/storage.db"
 #  sql lite database is used
 
 http_server:
-  address: "localhost:8004"
+  address: "localhost:8080"
   
 
 

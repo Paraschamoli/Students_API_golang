@@ -13,9 +13,9 @@ type HTTPServer struct {
 }
 
 type Config struct {
-	Env         string     `yaml:"env" env:"ENV" env-required:"true"`
+	Env         string     `yaml:"env" env:"ENV" env-required:"true" env-default:"production"`
 	StoragePath string     `yaml:"storage_path"`
-	HTTPServer  HTTPServer `yaml:"http_server"`
+	HTTPServer   `yaml:"http_server"`
 }
 
 func MustLoad() *Config {
@@ -24,7 +24,10 @@ func MustLoad() *Config {
 	configPath = os.Getenv("CONFIG_PATH")
 
 	if configPath==""{
+		// go run main.go --config=config.yaml
 		flags:=flag.String("config","","path to the configuration file")
+		// command-line flag:
+		// when running argument is passed it is called flags.
 		flag.Parse()
 		configPath= *flags
 
@@ -40,6 +43,11 @@ func MustLoad() *Config {
 
 		var cfg Config
 		err:=cleanenv.ReadConfig(configPath,&cfg)
+// Reads the config file,
+
+// Converts the YAML data into Go variables,
+
+// Stores everything inside cfg.
 		if err!= nil{
 			log.Fatalf("can not read config file: %s",err.Error())
 		}

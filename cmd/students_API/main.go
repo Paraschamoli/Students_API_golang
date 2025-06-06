@@ -1,9 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/Paraschamoli/students_API/internal/config"
 )
@@ -19,15 +25,32 @@ func main() {
 		w.Write([]byte("welcome to students api"))
 	})
 	//setup server
-	server:=http.Server{
+	server:=&http.Server{
 		Addr: cfg.HTTPServer.Address,
 		Handler:router,
 	}
-	fmt.Printf("server started %s",cfg.HTTPServer.Address)
-	err:=server.ListenAndServe()
-	if err !=nil{
-		log.Fatal("failed to start server")
-	}
 
+	done:=make(chan os.Signal,1)
+	signal.Notify(done,os.Interrupt,syscall.SIGINT,syscall.SIGTERM)
+	go func() {
+	fmt.Printf("server started %s\n", cfg.HTTPServer.Address)
+	err := server.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		log.Fatalf("failed to start server: %v", err)
+	}
+}()
+
+     <-done
+	 slog.Info("shutting down the server")
+
+	 ctx,cancel:=context.WithTimeout(context.Background(),5*time.Second)
+	 defer cancel()
+
+	 err:=server.Shutdown(ctx)
+	 if err!=nil{
+		slog.Error("server shutdown failed", slog.String("error",err.Error()))
+	} else {
+		slog.Info("server gracefully stopped")
+	}
 	
 }
