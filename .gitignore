@@ -47,5 +47,5 @@ coverage.out
 *.tmp
 *.temp
 
-storage
+/storage
 /config
