@@ -13,16 +13,22 @@ import (
 
 	"github.com/Paraschamoli/students_API/internal/config"
 	"github.com/Paraschamoli/students_API/internal/http/handlers/student"
+	"github.com/Paraschamoli/students_API/internal/storage/sqlite"
 )
 
 func main() {
 	//load config
 	cfg := config.MustLoad()
 	//database setup
+	storage,err:=sqlite.New(cfg)
+	if err!=nil{
+	log.Fatal(err)
+}
+slog.Info("database initialized successfully")
 	//setup router
 	router:=http.NewServeMux()
 
-	router.HandleFunc("POST /api/students",student.New())
+	router.HandleFunc("POST /api/students",student.New(storage))
 	//setup server
 	server:=&http.Server{
 		Addr: cfg.HTTPServer.Address,
@@ -45,7 +51,7 @@ func main() {
 	 ctx,cancel:=context.WithTimeout(context.Background(),5*time.Second)
 	 defer cancel()
 
-	 err:=server.Shutdown(ctx)
+	 err=server.Shutdown(ctx)
 	 if err!=nil{
 		slog.Error("server shutdown failed", slog.String("error",err.Error()))
 	} else {
