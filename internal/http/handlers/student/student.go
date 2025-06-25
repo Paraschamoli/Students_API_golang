@@ -40,8 +40,20 @@ return func(w http.ResponseWriter, r *http.Request) {
 slog.Info("creating new student", "student", student)
 
 		// TODO: Save the student to database (e.g., insert to MongoDB)
+		lastId,err:=storage.CreateStudent(
+			student.Name,
+			student.Email,
+			student.Age,
+		)
+		if err!=nil {
+	response.WriteJson(w,http.StatusInternalServerError,err)
+	return 
+}
+		response.WriteJson(w, http.StatusCreated, map[string]string{
+    "success": "student created",
+    "id":      fmt.Sprintf("%d", lastId),
+})
 
-		response.WriteJson(w, http.StatusCreated, map[string]string{"success": "student created"})
 	}
 }
 

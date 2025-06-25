@@ -32,6 +32,22 @@ return &Sqlite{
 },nil
 }
 
-func (s *Sqlite) CreateStudent(name string,email string,age int)(int,error){
-return 0,nil
+func (s *Sqlite) CreateStudent(name string,email string,age int)(int64,error){
+stmt,err:=s.Db.Prepare("INSERT INTO students (name, email, age) VALUES (?,?,?)")
+if err!=nil {
+	return 0,err
+}
+defer stmt.Close()
+  
+result,err:=stmt.Exec(name,email,age)
+if err!=nil {
+	return 0,err
+}
+lastid,err:=result.LastInsertId()
+if err!=nil {
+	return 0,err
+}
+
+
+	return lastid,nil
 }
